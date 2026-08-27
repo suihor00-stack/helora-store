@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
   ArrowRight,
   Heart,
@@ -20,6 +20,7 @@ import { Route, Switch, useLocation, Router as WouterRouter } from 'wouter';
 import heroImage from '../attached_assets/generated_images/aurelia-hero.jpg';
 import necklaceImage from '../attached_assets/generated_images/aurelia-necklace.jpg';
 import hoopsImage from '../attached_assets/generated_images/aurelia-hoops.jpg';
+import { fetchProducts } from '@/lib/store-data';
 
 const queryClient = new QueryClient();
 
@@ -37,7 +38,7 @@ type Product = {
 
 type BagLine = Product & { quantity: number };
 
-const products: Product[] = [
+const seedProducts: Product[] = [
   {
     id: '01',
     name: 'The Solace Pendant',
@@ -106,7 +107,7 @@ const products: Product[] = [
 const categories = ['All pieces', 'Necklaces', 'Earrings', 'Rings'];
 
 function money(value: number) {
-  return `$${value.toLocaleString('en-US')}`;
+   return `RM ${value.toLocaleString('en-US')}`;
 }
 
 function IconButton({
@@ -195,6 +196,14 @@ function AppStorefront() {
   const [storyOpen, setStoryOpen] = useState(false);
   const [favorites, setFavorites] = useState<string[]>([]);
   const [bag, setBag] = useState<BagLine[]>([]);
+  const [products, setProducts] = useState<Product[]>(seedProducts);
+
+  useEffect(() => {
+    // 從 Supabase 讀真正的商品；讀不到就沿用上面寫死的那組
+    fetchProducts(heroImage).then((live) => {
+      if (live.length) setProducts(live);
+    });
+  }, []);
 
   const filteredProducts = useMemo(() => {
     return products.filter((product) => {
@@ -205,7 +214,7 @@ function AppStorefront() {
         `${product.name} ${product.category} ${product.tone}`.toLowerCase().includes(normalizedQuery);
       return matchesCategory && matchesSearch;
     });
-  }, [activeCategory, query]);
+   }, [activeCategory, query, products]);
 
   const bagCount = bag.reduce((sum, item) => sum + item.quantity, 0);
   const bagTotal = bag.reduce((sum, item) => sum + item.price * item.quantity, 0);
@@ -383,7 +392,7 @@ function AppStorefront() {
               <div className="journal-art art-workshop"><span>making / 02</span></div>
               <p className="eyebrow">In the studio</p>
               <h3>Why the hand<br />still matters.</h3>
-              <button type="button" onClick={() => setQuickProduct(products[2])} data-testid="button-read-studio">Read the note <ArrowRight size={14} /></button>
+              <button type="button" onClick={() => setQuickProduct(products[2] ?? products[0] ?? null) data-testid="button-read-studio">Read the note <ArrowRight size={14} /></button>
             </article>
           </div>
         </section>
