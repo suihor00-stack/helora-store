@@ -392,7 +392,7 @@ function AppStorefront() {
               <div className="journal-art art-workshop"><span>making / 02</span></div>
               <p className="eyebrow">In the studio</p>
               <h3>Why the hand<br />still matters.</h3>
-              <button type="button" onClick={() => setQuickProduct(products[2] ?? products[0] ?? null) data-testid="button-read-studio">Read the note <ArrowRight size={14} /></button>
+              <button type="button" onClick={() => setQuickProduct(products[2] ?? products[0] ?? null)} data-testid="button-read-studio">Read the note <ArrowRight size={14} /></button>
             </article>
           </div>
         </section>
