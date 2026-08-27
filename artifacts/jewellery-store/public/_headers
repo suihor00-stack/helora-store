@@ -1,0 +1,16 @@
+# Cloudflare Pages 會把這些標頭套用到符合的路徑。
+
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: geolocation=(), microphone=(), camera=()
+
+# 後台不要被搜尋引擎收錄。
+# Cloudflare 會把 .html 去掉，所以兩個路徑都要蓋到。
+/admin
+  X-Robots-Tag: noindex, nofollow
+  X-Frame-Options: DENY
+
+/admin.html
+  X-Robots-Tag: noindex, nofollow
+  X-Frame-Options: DENY
